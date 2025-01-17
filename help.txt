@@ -15,4 +15,10 @@ Setting up Python on your computer
 - Python Auto Venv by WolfiesHorizon
 - Python Indent by Kevin Rose
 
-4. 
+4. pull from https://github.com/MoonLight693/USCCB-Manuscript and trust it.
+
+5. On the top of VScode select View -> Command Palette...
+- This will open a small terminal at the top of the screen
+- type in Python: Select Interpreter or select it from the drop down
+- then select the .venv option and any python packages in the requirements.txt 
+should not give you any more errors
