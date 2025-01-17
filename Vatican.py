@@ -7,3 +7,6 @@ Then, parses the Paragraph and its number into a usable table.
 Links to additional resources:
 '''
 
+from lxml import etree
+import requests
+from io import StringIO

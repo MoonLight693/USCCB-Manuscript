@@ -1,0 +1,18 @@
+Setting up Python on your computer
+
+1. install VScode
+
+2. on the left hand side hover over and click on the extensions tab
+
+3. install the following extensions:
+- Code Runner by Don Jayamanne
+- Python by Microsoft
+- Plance by Microsoft
+- Python Debugger by Microsoft
+- Python Environments by Microsoft
+- pip installer by Peter Steiner
+- Pip Manager by slightc
+- Python Auto Venv by WolfiesHorizon
+- Python Indent by Kevin Rose
+
+4. 
