@@ -22,3 +22,7 @@ Setting up Python on your computer
 - type in Python: Select Interpreter or select it from the drop down
 - then select the .venv option and any python packages in the requirements.txt 
 should not give you any more errors
+
+6. (for updating the requirements.txt with the right packages as they are currently installed)
+- use the command: pip --isolated freeze > requirements.txt
+in the terminal
