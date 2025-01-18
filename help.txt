@@ -1,6 +1,6 @@
 Setting up Python on your computer
 
-1. install VScode
+1. install VScode and open it.
 
 2. on the left hand side hover over and click on the extensions tab
 
