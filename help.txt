@@ -26,3 +26,7 @@ should not give you any more errors
 6. (for updating the requirements.txt with the right packages as they are currently installed)
 - use the command: pip --isolated freeze > requirements.txt
 in the terminal
+
+installing virtual Environments
+the .gitignore should prevent you from uploading your Environments,
+so you only need to reinstall each time.
