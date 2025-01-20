@@ -13,10 +13,11 @@ from lxml import etree
 import requests
 from io import StringIO
 
-# get the web page html
-response = requests.get("https://www.vatican.va/archive/ENG0015/__P2.HTM")
 # define a parsing method for gathering elements of the html
 parser = etree.HTMLParser()
+
+# get the web page html
+response = requests.get("https://www.vatican.va/archive/ENG0015/__P1.HTM")
 # all html lines can be accessed via the tree by parsing
 tree = etree.parse(StringIO(str(response.text)), parser)
 # define a specific element in the tree to wish to grab
@@ -37,4 +38,21 @@ while i < x:
         x = x-1 # decrease the count of length of list
         i += 1 # move to next element
     else: i += 1 # element contatins CCC number, so do nothing
-print(paragraph)
+
+import csv
+import os
+
+# remove previous output if exists
+file_path = "Vatican/new_table.csv"
+if os.path.exists(file_path):
+    os.remove(file_path)
+
+CCC = 1
+with open(file_path, "w", newline='') as new_file:
+    cvs_writer = csv.writer(new_file, delimiter=":")
+    a = []
+    for i in range(len(paragraph)):
+        paragraph[i] = paragraph[i].replace(str(CCC) + " ", "")
+        a.append(str(CCC))
+        CCC += 1
+    cvs_writer.writerows(zip(a,paragraph))
