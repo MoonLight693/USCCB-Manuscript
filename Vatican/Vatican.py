@@ -37,7 +37,7 @@ while i < x:
         paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
         x = x-1 # decrease the count of length of list
         i += 1 # move to next element
-    else: i += 1 # element contatins CCC number, so do nothing
+    else: i += 1 # element contains CCC number, so do nothing
 
 import csv
 import os
