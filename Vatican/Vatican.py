@@ -17,7 +17,7 @@ from io import StringIO
 parser = etree.HTMLParser()
 
 # get the web page html
-response = requests.get("https://www.vatican.va/archive/ENG0015/__P1.HTM")
+response = requests.get("https://www.vatican.va/archive/ENG0015/__P3.HTM")
 # all html lines can be accessed via the tree by parsing
 tree = etree.parse(StringIO(str(response.text)), parser)
 # define a specific element in the tree to wish to grab
@@ -47,7 +47,7 @@ file_path = "Vatican/new_table.csv"
 if os.path.exists(file_path):
     os.remove(file_path)
 
-CCC = 1
+CCC = 4
 with open(file_path, "w", newline='') as new_file:
     cvs_writer = csv.writer(new_file, delimiter=":")
     a = []
