@@ -9,6 +9,7 @@ Links to additional resources:
 - https://www.geeksforgeeks.org/python-removing-newline-character-from-string/#using-strsplitlines-and-strjoin - split line tutorial
 '''
 
+''' Request and parse Paragraph from Vatican CCC'''
 from lxml import etree
 import requests
 from io import StringIO
@@ -17,7 +18,7 @@ from io import StringIO
 parser = etree.HTMLParser()
 
 # get the web page html
-response = requests.get("https://www.vatican.va/archive/ENG0015/__P8.HTM")
+response = requests.get("https://www.vatican.va/archive/ENG0015/__P2.HTM")
 # all html lines can be accessed via the tree by parsing
 tree = etree.parse(StringIO(str(response.text)), parser)
 # define a specific element in the tree to wish to grab
@@ -27,10 +28,11 @@ paragraph = tree.xpath('//p[@class="MsoNormal"]/text()')
 for i in range(len(paragraph)):
     paragraph[i] = " ".join(paragraph[i].splitlines())
 
-# stitch the paragraphs together so each element is 1 CCC paragraph
+''' stitch the paragraphs together so each element is 1 CCC paragraph '''
 x = len(paragraph)
 i=0
 while i < x:
+    '''removing any titles and only include CCC Paragraphs'''
     if paragraph[i].isupper() and paragraph[i].isalpha():
         paragraph.pop(i)
         x -= 1
@@ -43,6 +45,7 @@ while i < x:
         i += 1 # move to next element
     else: i += 1 # element contains CCC number, so do nothing
 
+''' Write to CSV'''
 import csv
 import os
 
@@ -51,7 +54,7 @@ file_path = "Vatican/new_table.csv"
 if os.path.exists(file_path):
     os.remove(file_path)
 
-CCC = 25
+CCC = 1
 with open(file_path, "w", newline='') as new_file:
     cvs_writer = csv.writer(new_file, delimiter=":")
     a = []
