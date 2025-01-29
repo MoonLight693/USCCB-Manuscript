@@ -14,49 +14,39 @@ from lxml import etree
 import requests
 from io import StringIO
 
-# define a parsing method for gathering elements of the html
-parser = etree.HTMLParser()
+def paragraph(URL):
+    # define a parsing method for gathering elements of the html
+    parser = etree.HTMLParser()
 
-# get the web page html
-response = requests.get("https://www.vatican.va/archive/ENG0015/__P1.HTM")
-# all html lines can be accessed via the tree by parsing
-tree = etree.parse(StringIO(str(response.text)), parser)
-# define a specific element in the tree to wish to grab
-paragraph = tree.xpath('//p[@class="MsoNormal"]/text()')
+    # get the web page html
+    response = requests.get(URL)
+    # all html lines can be accessed via the tree by parsing
+    tree = etree.parse(StringIO(str(response.text)), parser)
+    # define a specific element in the tree to wish to grab
+    paragraph = tree.xpath('//p[@class="MsoNormal"]/text()')
 
-# remove the string gargen : \n\r, \n, footnote markers
-for i in range(len(paragraph)):
-    paragraph[i] = " ".join(paragraph[i].splitlines())
+    # remove the string gargen : \n\r, \n, footnote markers
+    for i in range(len(paragraph)):
+        paragraph[i] = " ".join(paragraph[i].splitlines())
+    return paragraph
 
-''' stitch the paragraphs together so each element is 1 CCC paragraph '''
-# only the last part is need of restitching
-i=3
+paragraph = paragraph("https://www.vatican.va/archive/ENG0015/__P1.HTM")
+
+i = len(paragraph) - 1
+# if the start of the string is not the CCC number and is not the first paragraph in the list
 b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
 paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
 
-print(paragraph)
-
-# Write to CSV
-import csv
+''' Write to CSV'''
 import os
 
 # remove previous output if exists
-file_path = "Vatican/new_table.csv"
+file_path = "Vatican/new_tables.csv"
 if os.path.exists(file_path):
     os.remove(file_path)
 
-CCC = 0
-a = [0,0,0,]
-#with open(file_path, 'w', newline='') as f:
-#    writer = csv.writer(f, delimiter=':', quoting=csv.QUOTE_ALL, quotechar='\"')
-#    writer.writerows(zip(a,paragraph))
-data = [
-    ["Value 1", "Value 2", "Value 3"],
-    ["Value, 4", "Value 5", "Value 6"],
-    ["Value 7", "Value \"8\"", "Value 9"]
-]
-
-with open("output.csv", "w", newline="") as f:
-    writer = csv.writer(f, delimiter=":", quotechar='\"', quoting=csv.QUOTE_NONE, escapechar='\"')
-    for row in data:
-        writer.writerow(row)
+# Simple
+# Assisted by Dominic Antony
+f = open(file_path, "w")
+for p in paragraph: f.write(p + "\n")
+f.close()

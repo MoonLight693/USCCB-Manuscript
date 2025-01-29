@@ -18,7 +18,7 @@ from io import StringIO
 parser = etree.HTMLParser()
 
 # get the web page html
-response = requests.get("https://www.vatican.va/archive/ENG0015/__P2.HTM")
+response = requests.get("https://www.vatican.va/archive/ENG0015/__P3.HTM")
 # all html lines can be accessed via the tree by parsing
 tree = etree.parse(StringIO(str(response.text)), parser)
 # define a specific element in the tree to wish to grab
@@ -28,18 +28,14 @@ paragraph = tree.xpath('//p[@class="MsoNormal"]/text()')
 for i in range(len(paragraph)):
     paragraph[i] = " ".join(paragraph[i].splitlines())
 
-print("hi there:")
-print(paragraph)
-
 ''' stitch the paragraphs together so each element is 1 CCC paragraph '''
 x = len(paragraph)
 i=0
 while i < x:
-    '''removing any titles and only include CCC Paragraphs'''
-    if paragraph[i].isupper() and paragraph[i].isalpha():
-        paragraph.pop(i)
+    if not paragraph[i][0].isdigit() and i == 0:
+        # if there are addditional strings that are not CCC at the beginning of the paragraph list, remove them
+        paragraph.pop(0)
         x -= 1
-        i += 1
     elif not paragraph[i][0].isdigit() and i != 0:
         # if the start of the string is not the CCC number and is not the first paragraph in the list
         b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
