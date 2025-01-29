@@ -13,8 +13,9 @@ Links to additional resources:
 from lxml import etree
 import requests
 from io import StringIO
+import os
 
-def paragraph(URL):
+def parsing(URL):
     # define a parsing method for gathering elements of the html
     parser = etree.HTMLParser()
 
@@ -30,18 +31,16 @@ def paragraph(URL):
         paragraph[i] = " ".join(paragraph[i].splitlines())
     return paragraph
 
-paragraph = paragraph("https://www.vatican.va/archive/ENG0015/__P1.HTM")
+paragraph = parsing("https://www.vatican.va/archive/ENG0015/__P1.HTM")
 
 i = len(paragraph) - 1
 # if the start of the string is not the CCC number and is not the first paragraph in the list
 b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
 paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
 
-''' Write to CSV'''
-import os
-
+''' Write to CSV: initialization'''
 # remove previous output if exists
-file_path = "Vatican/new_tables.csv"
+file_path = "Vatican/new_table.csv"
 if os.path.exists(file_path):
     os.remove(file_path)
 

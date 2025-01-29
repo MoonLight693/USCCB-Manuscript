@@ -9,34 +9,19 @@ Links to additional resources:
 - https://www.geeksforgeeks.org/python-removing-newline-character-from-string/#using-strsplitlines-and-strjoin - split line tutorial
 '''
 
-''' Request and parse Paragraph from Vatican CCC'''
-from lxml import etree
-import requests
-from io import StringIO
+from Vatican_prologue import *
 
-# define a parsing method for gathering elements of the html
-parser = etree.HTMLParser()
-
-# get the web page html
-response = requests.get("https://www.vatican.va/archive/ENG0015/__P3.HTM")
-# all html lines can be accessed via the tree by parsing
-tree = etree.parse(StringIO(str(response.text)), parser)
-# define a specific element in the tree to wish to grab
-paragraph = tree.xpath('//p[@class="MsoNormal"]/text()')
-
-# remove the string gargen : \n\r, \n, footnote markers
-for i in range(len(paragraph)):
-    paragraph[i] = " ".join(paragraph[i].splitlines())
+paragraph = parsing("https://www.vatican.va/archive/ENG0015/__P2.HTM")
 
 ''' stitch the paragraphs together so each element is 1 CCC paragraph '''
-x = len(paragraph)
+x = len(paragraph) - 1
 i=0
 while i < x:
     if not paragraph[i][0].isdigit() and i == 0:
-        # if there are addditional strings that are not CCC at the beginning of the paragraph list, remove them
+        # if there are additional strings that are not CCC at the beginning of the paragraph list, remove them
         paragraph.pop(0)
         x -= 1
-    elif not paragraph[i][0].isdigit() and i != 0:
+    elif not paragraph[i][0].isdigit():
         # if the start of the string is not the CCC number and is not the first paragraph in the list
         b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
         paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
@@ -46,16 +31,12 @@ while i < x:
 print("After stitching")
 print(paragraph)
 
-''' Write to CSV'''
-import os
+def appending(paragraph, file_path):
+    '''Appending to CSV'''
+    # Simple
+    # Assisted by Dominic Antony
+    f = open(file_path, "a")
+    for p in paragraph: f.write(p + "\n")
+    f.close()
 
-# remove previous output if exists
-file_path = "Vatican/new_table.csv"
-if os.path.exists(file_path):
-    os.remove(file_path)
-
-# Simple
-# Assisted by Dominic Antony
-f = open(file_path, "w")
-for p in paragraph: f.write(p + "\n")
-f.close()
+appending(paragraph, file_path)
