@@ -1,0 +1,139 @@
+INSERT INTO AirBusiness VALUES ('Alaska', 9000000);
+INSERT INTO AirBusiness VALUES ('United', 10);
+INSERT INTO AirBusiness VALUES ('Another Airline Company Co.', 2000);
+INSERT INTO Customer VALUES ('jbrick', 'Jeff', 'Brick', 1000);
+INSERT INTO Customer VALUES ('asmith', 'Alice', 'Smith', 2000);
+INSERT INTO Customer VALUES ('bjones', 'Bob', 'Jones', 1500);
+INSERT INTO Customer VALUES ('csanders', 'Charlie', 'Sanders', 2500);
+INSERT INTO Customer VALUES ('dlee', 'David', 'Lee', 3000);
+INSERT INTO Customer VALUES ('emartin', 'Eve', 'Martin', 1200);
+INSERT INTO Customer VALUES ('fwhite', 'Frank', 'White', 1800);
+INSERT INTO Customer VALUES ('ggarcia', 'Grace', 'Garcia', 2100);
+INSERT INTO Customer VALUES ('hkim', 'Hannah', 'Kim', 2700);
+INSERT INTO Customer VALUES ('ijackson', 'Ian', 'Jackson', 3500);
+INSERT INTO Customer VALUES ('jkumar', 'James', 'Kumar', 4000);
+INSERT INTO Customer VALUES ('klopez', 'Karen', 'Lopez', 3100);
+INSERT INTO Customer VALUES ('lparker', 'Liam', 'Parker', 1900);
+INSERT INTO Customer VALUES ('mcarter', 'Mia', 'Carter', 2900);
+INSERT INTO Customer VALUES ('nmoore', 'Noah', 'Moore', 3600);
+INSERT INTO Customer VALUES ('osanchez', 'Olivia', 'Sanchez', 2200);
+INSERT INTO Customer VALUES ('pbrown', 'Paul', 'Brown', 3200);
+INSERT INTO Customer VALUES ('qreyes', 'Quinn', 'Reyes', 1500);
+INSERT INTO Customer VALUES ('rgreen', 'Rachel', 'Green', 2800);
+INSERT INTO Customer VALUES ('staylor', 'Sophia', 'Taylor', 3300);
+INSERT INTO Model VALUES (1030, 'Alaska', 'Busliner', 500);
+INSERT INTO Model VALUES (1040, 'Delta', 'SkyExpress', 320);
+INSERT INTO Model VALUES (1050, 'Southwest', 'AirCruiser', 400);
+INSERT INTO Model VALUES (1060, 'JetBlue', 'BlueWave', 280);
+INSERT INTO Model VALUES (1070, 'Frontier', 'EcoFlyer', 230);
+INSERT INTO Model VALUES (1080, 'Spirit', 'SkySaver', 250);
+INSERT INTO Model VALUES (1090, 'Allegiant', 'SunSeeker', 180);
+INSERT INTO Model VALUES (1100, 'Virgin Atlantic', 'DreamVoyager', 330);
+INSERT INTO Model VALUES (1110, 'Emirates', 'SkyLux', 500);
+INSERT INTO Model VALUES (1120, 'Qantas', 'OutbackExpress', 420);
+INSERT INTO Model VALUES (1130, 'Air Canada', 'MapleGlider', 290);
+INSERT INTO Model VALUES (1140, 'Lufthansa', 'EuroJet', 300);
+INSERT INTO Model VALUES (1150, 'KLM', 'RoyalCruiser', 310);
+INSERT INTO Model VALUES (1160, 'Singapore Airlines', 'SkyHaven', 350);
+INSERT INTO Model VALUES (1170, 'Cathay Pacific', 'AsiaStar', 380);
+INSERT INTO Model VALUES (1180, 'Turkish Airlines', 'Anatolia', 280);
+INSERT INTO Model VALUES (1190, 'ANA', 'PacificGlider', 270);
+INSERT INTO Model VALUES (1200, 'Iberia', 'EspanaFly', 240);
+INSERT INTO Model VALUES (1210, 'Aeromexico', 'AztecGlider', 260);INSERT INTO Model VALUES (1220, 'Qatar Airways', 'FalconX', 370);
+INSERT INTO Plane VALUES (1234567890, 1030);
+INSERT INTO Plane VALUES (1234567891, 1040);
+INSERT INTO Plane VALUES (1234567892, 1050);
+INSERT INTO Plane VALUES (1234567893, 1060);
+INSERT INTO Plane VALUES (1234567894, 1070);
+INSERT INTO Plane VALUES (1234567895, 1080);
+INSERT INTO Plane VALUES (1234567896, 1090);
+INSERT INTO Plane VALUES (1234567897, 1100);
+INSERT INTO Plane VALUES (1234567898, 1110);
+INSERT INTO Plane VALUES (1234567899, 1120);
+INSERT INTO Plane VALUES (1234567901, 1130);
+INSERT INTO Plane VALUES (1234567902, 1140);
+INSERT INTO Plane VALUES (1234567903, 1150);
+INSERT INTO Plane VALUES (1234567904, 1160);
+INSERT INTO Plane VALUES (1234567905, 1170);
+INSERT INTO Plane VALUES (1234567906, 1180);
+INSERT INTO Plane VALUES (1234567907, 1190);
+INSERT INTO Plane VALUES (1234567908, 1200);
+INSERT INTO Plane VALUES (1234567909, 1210);
+INSERT INTO Plane VALUES (1234567900, 1220);
+INSERT INTO Airport VALUES ('Street1', 'Bend', 'USA', 'Bend Airport', 'Alaska');
+INSERT INTO Airport VALUES ('Street2', 'Dallas', 'USA', 'Dallas Airport', 'United');
+INSERT INTO Airport VALUES ('Street3', 'Pittsburg', 'USA', 'Pittsburg Airport', 'Another Airline
+Company Co.');
+INSERT INTO Flight VALUES (10001, 20241206120000, 'Bend Airport', 20241206100000,
+'Dallas Airport', 'On Time', 1234567903);
+INSERT INTO Flight VALUES (10002, 20241206130000, 'Dallas Airport', 20241206110000,
+'Pittsburg Airport', 'Delayed', 1234567904);
+INSERT INTO Flight VALUES (10003, 20241206150000, 'Pittsburg Airport', 20241206140000,
+'Bend Airport', 'Cancelled', 1234567905);
+INSERT INTO Flight VALUES (10004, 20241206170000, 'Bend Airport', 20241206160000,
+'Dallas Airport', 'On Time', 1234567906);
+INSERT INTO Flight VALUES (10005, 20241206190000, 'Dallas Airport', 20241206180000,
+'Pittsburg Airport', 'On Time', 1234567907);
+INSERT INTO Flight VALUES (10006, 20241206210000, 'Pittsburg Airport', 20241206200000,
+'Bend Airport', 'Delayed', 1234567908);
+INSERT INTO Flight VALUES (10007, 20241206230000, 'Bend Airport', 20241206220000,
+'Dallas Airport', 'On Time', 1234567909);
+INSERT INTO Flight VALUES (10008, 20241207010000, 'Dallas Airport', 20241206230000,
+'Pittsburg Airport', 'Cancelled', 1234567900);INSERT INTO Flight VALUES (10009, 20241207030000, 'Pittsburg Airport', 20241207020000,
+'Bend Airport', 'On Time', 1234567890);
+INSERT INTO Flight VALUES (10010, 20241207050000, 'Bend Airport', 20241207040000,
+'Dallas Airport', 'Delayed', 1234567891);
+INSERT INTO Flight VALUES (10011, 20241207070000, 'Dallas Airport', 20241207060000,
+'Pittsburg Airport', 'On Time', 1234567892);
+INSERT INTO Flight VALUES (10012, 20241207090000, 'Pittsburg Airport', 20241207080000,
+'Bend Airport', 'Delayed', 1234567893);
+INSERT INTO Flight VALUES (10013, 20241207110000, 'Bend Airport', 20241207100000,
+'Dallas Airport', 'Cancelled', 1234567894);
+INSERT INTO Flight VALUES (10014, 20241207130000, 'Dallas Airport', 20241207120000,
+'Pittsburg Airport', 'On Time', 1234567895);
+INSERT INTO Flight VALUES (10015, 20241207150000, 'Pittsburg Airport', 20241207140000,
+'Bend Airport', 'Delayed', 1234567896);
+INSERT INTO Flight VALUES (10016, 20241207170000, 'Bend Airport', 20241207160000,
+'Dallas Airport', 'On Time', 1234567897);
+INSERT INTO Flight VALUES (10017, 20241207190000, 'Dallas Airport', 20241207180000,
+'Pittsburg Airport', 'Cancelled', 1234567898);
+INSERT INTO Flight VALUES (10018, 20241207210000, 'Pittsburg Airport', 20241207200000,
+'Bend Airport', 'On Time', 1234567899);
+INSERT INTO Flight VALUES (10019, 20241207230000, 'Bend Airport', 20241207220000,
+'Dallas Airport', 'Delayed', 1234567901);
+INSERT INTO Flight VALUES (10020, 20241208010000, 'Dallas Airport', 20241208000000,
+'Pittsburg Airport', 'On Time', 1234567902);
+INSERT INTO Ticket VALUES (10001, 9876543210, 'jbrick', 500.00, 'Business');
+INSERT INTO Ticket VALUES (10002, 9876543211, 'asmith', 300.00, 'Economy');
+INSERT INTO Ticket VALUES (10003, 9876543212, 'bjones', 400.00, 'First');
+INSERT INTO Ticket VALUES (10004, 9876543213, 'csanders', 450.00, 'Business');
+INSERT INTO Ticket VALUES (10005, 9876543214, 'dlee', 350.00, 'Economy');
+INSERT INTO Ticket VALUES (10006, 9876543215, 'emartin', 500.00, 'First');
+INSERT INTO Ticket VALUES (10007, 9876543216, 'fwhite', 250.00, 'Economy');
+INSERT INTO Ticket VALUES (10008, 9876543217, 'ggarcia', 450.00, 'Business');
+INSERT INTO Ticket VALUES (10009, 9876543218, 'hkim', 600.00, 'First');
+INSERT INTO Ticket VALUES (10010, 9876543219, 'ijackson', 300.00, 'Economy');
+INSERT INTO Ticket VALUES (10011, 9876543220, 'jkumar', 550.00, 'Business');
+INSERT INTO Ticket VALUES (10012, 9876543221, 'klopez', 320.00, 'Economy');
+INSERT INTO Ticket VALUES (10013, 9876543222, 'lparker', 500.00, 'First');
+INSERT INTO Ticket VALUES (10014, 9876543223, 'mcarter', 450.00, 'Business');
+INSERT INTO Ticket VALUES (10015, 9876543224, 'nmoore', 330.00, 'Economy');
+INSERT INTO Ticket VALUES (10016, 9876543225, 'osanchez', 480.00, 'First');
+INSERT INTO Ticket VALUES (10017, 9876543226, 'pbrown', 370.00, 'Business');
+INSERT INTO Ticket VALUES (10018, 9876543227, 'qreyes', 290.00, 'Economy');
+INSERT INTO Ticket VALUES (10019, 9876543228, 'rgreen', 450.00, 'Business');INSERT INTO Ticket VALUES (10020, 9876543229, 'staylor', 550.00, 'First');
+INSERT INTO Gate VALUES (001, 'A', 'Bend Airport');
+INSERT INTO Gate VALUES (002, 'A', 'Bend Airport');
+INSERT INTO Gate VALUES (001, 'A', 'Dallas Airport');
+INSERT INTO Gate VALUES (001, 'B', 'Dallas Airport');
+INSERT INTO Gate VALUES (001, 'A', 'Pittsburg Airport');
+INSERT INTO Gate VALUES (001, 'C', 'Pittsburg Airport');
+INSERT INTO AirEmployee VALUES ('11111111', 'Joe', 'Shmoe', 'Pilot', 'Alaska', '10016');
+INSERT INTO AirEmployee VALUES ('12345678', 'Jeff', 'Berk', 'Flight Attendent', 'United',
+'10013');
+INSERT INTO AirEmployee VALUES ('87654321', 'Jerami', 'Smith', 'Pilot', 'Another Airline
+Company Co.', '10010');
+INSERT INTO GroundWorker VALUES ('13243568', 'Allie', 'Barns', 'Packer', 'Pittsburg Airport');
+INSERT INTO GroundWorker (id, employedby) VALUES ('38459375', 'Bend Airport');
+INSERT INTO GroundWorker VALUES ('13243567', 'Mark', 'Johnson', 'Janitor', 'Dallas Airport');
+Test: !@#$%^&*()_-+=~`?/\|>.<,
