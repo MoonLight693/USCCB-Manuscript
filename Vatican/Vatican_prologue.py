@@ -38,9 +38,12 @@ i = len(paragraph) - 1
 b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
 paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
 
+for i in range(len(paragraph)):
+    paragraph[i] = "PROLOGUE " + paragraph[i]
+
 ''' Write to CSV: initialization'''
 # remove previous output if exists
-file_path = "Vatican/new_table.csv"
+file_path = "Vatican/new_table.txt"
 if os.path.exists(file_path):
     os.remove(file_path)
 
