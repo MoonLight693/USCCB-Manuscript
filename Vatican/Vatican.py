@@ -37,12 +37,15 @@ def stitching(paragraph):
         else: i += 1 # element contains CCC number, so do nothing
 
     # fail safe check for if the last item in the paragraph list was skipped in stitching
-    if paragraph[-1][0] == " ":
-        b = [''.join(paragraph[i-1:i+1])]
-        paragraph = paragraph[:i-1] + b + paragraph[i+1:]
+    if not paragraph[-1][0].isdigit():
+        b = [''.join(paragraph[-2:])]
+        paragraph = paragraph[:-2] + b 
     
     return paragraph
 
 paragraph = parsing("https://www.vatican.va/archive/ENG0015/__P2.HTM")
+paragraph = stitching(paragraph)
+appending(paragraph, file_path)
+paragraph = parsing("https://www.vatican.va/archive/ENG0015/__P3.HTM")
 paragraph = stitching(paragraph)
 appending(paragraph, file_path)
