@@ -33,8 +33,8 @@ def parsing(URL):
 
 paragraph = parsing("https://www.vatican.va/archive/ENG0015/__P1.HTM")
 
+# copy of last item stitch, used in prologue as prologue CCC has no CCC # associated
 i = len(paragraph) - 1
-# if the start of the string is not the CCC number and is not the first paragraph in the list
 b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
 paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
 

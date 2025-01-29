@@ -11,26 +11,6 @@ Links to additional resources:
 
 from Vatican_prologue import *
 
-paragraph = parsing("https://www.vatican.va/archive/ENG0015/__P2.HTM")
-
-''' stitch the paragraphs together so each element is 1 CCC paragraph '''
-x = len(paragraph) - 1
-i=0
-while i < x:
-    if not paragraph[i][0].isdigit() and i == 0:
-        # if there are additional strings that are not CCC at the beginning of the paragraph list, remove them
-        paragraph.pop(0)
-        x -= 1
-    elif not paragraph[i][0].isdigit():
-        # if the start of the string is not the CCC number and is not the first paragraph in the list
-        b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
-        paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
-        x = x-1 # decrease the count of length of list
-        i += 1 # move to next element
-    else: i += 1 # element contains CCC number, so do nothing
-print("After stitching")
-print(paragraph)
-
 def appending(paragraph, file_path):
     '''Appending to CSV'''
     # Simple
@@ -39,4 +19,30 @@ def appending(paragraph, file_path):
     for p in paragraph: f.write(p + "\n")
     f.close()
 
+def stitching(paragraph):
+    ''' stitch the paragraphs together so each element is one CCC paragraph '''
+    x = len(paragraph) - 1
+    i=0
+    while i < x:
+        if not paragraph[i][0].isdigit() and i == 0:
+            # if there are additional strings that are not CCC at the beginning of the paragraph list, remove them
+            paragraph.pop(0)
+            x -= 1
+        elif not paragraph[i][0].isdigit():
+            # if the start of the string is not the CCC number and is not the first paragraph in the list
+            b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
+            paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
+            x = x-1 # decrease the count of length of list
+            i += 1 # move to next element
+        else: i += 1 # element contains CCC number, so do nothing
+
+    # fail safe check for if the last item in the paragraph list was skipped in stitching
+    if paragraph[-1][0] == " ":
+        b = [''.join(paragraph[i-1:i+1])]
+        paragraph = paragraph[:i-1] + b + paragraph[i+1:]
+    
+    return paragraph
+
+paragraph = parsing("https://www.vatican.va/archive/ENG0015/__P2.HTM")
+paragraph = stitching(paragraph)
 appending(paragraph, file_path)
