@@ -31,14 +31,6 @@ def parsing(URL):
         paragraph[i] = " ".join(paragraph[i].splitlines())
     return paragraph
 
-def appending(paragraph, file_path):
-    '''Appending to CSV'''
-    # Simple
-    # Assisted by Dominic Antony
-    f = open(file_path, "a")
-    for p in paragraph: f.write(p + "\n")
-    f.close()
-
 def stitching(paragraph):
     ''' stitch the paragraphs together so each element is one CCC paragraph '''
     x = len(paragraph) - 1
@@ -62,6 +54,14 @@ def stitching(paragraph):
         paragraph = paragraph[:-2] + b 
     
     return paragraph
+
+def appending(paragraph, file_path):
+    '''Appending to CSV'''
+    # Simple
+    # Assisted by Dominic Antony
+    f = open(file_path, "a")
+    for p in paragraph: f.write(p + "\n")
+    f.close()
 
 def page_next(page):
     # all possible values for the page keys
@@ -117,10 +117,15 @@ f = open(file_path, "w")
 for p in paragraph: f.write(p + "\n")
 f.close()
 
-page = "PD"
-#for i in range(0,11):
-paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
-print(paragraph)
-paragraph = stitching(paragraph)
-appending(paragraph, file_path)
+page = "P2"
+while page != "PD":
+    paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
+    paragraph = stitching(paragraph)
+    appending(paragraph, file_path)
+    page = page_next(page)
 page = page_next(page)
+while page != "PD":
+    paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
+    paragraph = stitching(paragraph)
+    appending(paragraph, file_path)
+    page = page_next(page)
