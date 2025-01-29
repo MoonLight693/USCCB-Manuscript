@@ -18,7 +18,7 @@ from io import StringIO
 parser = etree.HTMLParser()
 
 # get the web page html
-response = requests.get("https://www.vatican.va/archive/ENG0015/__P2.HTM")
+response = requests.get("https://www.vatican.va/archive/ENG0015/__P1.HTM")
 # all html lines can be accessed via the tree by parsing
 tree = etree.parse(StringIO(str(response.text)), parser)
 # define a specific element in the tree to wish to grab
@@ -28,29 +28,16 @@ paragraph = tree.xpath('//p[@class="MsoNormal"]/text()')
 for i in range(len(paragraph)):
     paragraph[i] = " ".join(paragraph[i].splitlines())
 
-print("hi there:")
-print(paragraph)
-
 ''' stitch the paragraphs together so each element is 1 CCC paragraph '''
-x = len(paragraph)
-i=0
-while i < x:
-    '''removing any titles and only include CCC Paragraphs'''
-    if paragraph[i].isupper() and paragraph[i].isalpha():
-        paragraph.pop(i)
-        x -= 1
-        i += 1
-    elif not paragraph[i][0].isdigit() and i != 0:
-        # if the start of the string is not the CCC number and is not the first paragraph in the list
-        b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
-        paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
-        x = x-1 # decrease the count of length of list
-        i += 1 # move to next element
-    else: i += 1 # element contains CCC number, so do nothing
-print("After stitching")
+# only the last part is need of restitching
+i=3
+b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
+paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
+
 print(paragraph)
 
-''' Write to CSV'''
+# Write to CSV
+import csv
 import os
 
 # remove previous output if exists
@@ -58,8 +45,18 @@ file_path = "Vatican/new_table.csv"
 if os.path.exists(file_path):
     os.remove(file_path)
 
-# Simple
-# Assisted by Dominic Antony
-f = open(file_path, "w")
-for p in paragraph: f.write(p + "\n")
-f.close()
+CCC = 0
+a = [0,0,0,]
+#with open(file_path, 'w', newline='') as f:
+#    writer = csv.writer(f, delimiter=':', quoting=csv.QUOTE_ALL, quotechar='\"')
+#    writer.writerows(zip(a,paragraph))
+data = [
+    ["Value 1", "Value 2", "Value 3"],
+    ["Value, 4", "Value 5", "Value 6"],
+    ["Value 7", "Value \"8\"", "Value 9"]
+]
+
+with open("output.csv", "w", newline="") as f:
+    writer = csv.writer(f, delimiter=":", quotechar='\"', quoting=csv.QUOTE_NONE, escapechar='\"')
+    for row in data:
+        writer.writerow(row)
