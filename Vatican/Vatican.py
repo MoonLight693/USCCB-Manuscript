@@ -25,10 +25,15 @@ def parsing(URL):
     tree = etree.parse(StringIO(str(response.text)), parser)
     # define a specific element in the tree to wish to grab
     paragraph = tree.xpath('//p[@class="MsoNormal"]/text()')
+    
+    if not paragraph:
+        # if paragpraph empty, then your at a brief page in CCC
+        paragraph = tree.xpath('//p[@class="MsoNormal"]/i/text()')
 
     # remove the string gargen : \n\r, \n, footnote markers
     for i in range(len(paragraph)):
         paragraph[i] = " ".join(paragraph[i].splitlines())
+        
     return paragraph
 
 def stitching(paragraph):
@@ -118,13 +123,7 @@ for p in paragraph: f.write(p + "\n")
 f.close()
 
 page = "P2"
-while page != "PD":
-    paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
-    paragraph = stitching(paragraph)
-    appending(paragraph, file_path)
-    page = page_next(page)
-page = page_next(page)
-while page != "PD":
+while page != "PAE":
     paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
     paragraph = stitching(paragraph)
     appending(paragraph, file_path)
