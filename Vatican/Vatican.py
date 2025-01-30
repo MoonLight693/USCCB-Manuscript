@@ -123,7 +123,7 @@ for p in paragraph: f.write(p + "\n")
 f.close()
 
 page = "P2"
-while page != "PAE":
+while page != "PF":
     paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
     paragraph = stitching(paragraph)
     appending(paragraph, file_path)
