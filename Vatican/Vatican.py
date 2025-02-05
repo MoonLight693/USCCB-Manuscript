@@ -45,6 +45,9 @@ def stitching(paragraph):
             # if there are additional strings that are not CCC at the beginning of the paragraph list, remove them
             paragraph.pop(0)
             x -= 1
+        elif paragraph[i][-1] != ".":
+            paragraph.pop(i)
+            x -= 1
         elif not paragraph[i][0].isdigit():
             # if the start of the string is not the CCC number and is not the first paragraph in the list
             b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
@@ -112,7 +115,7 @@ for i in range(len(paragraph)):
 
 ''' Write to CSV: initialization'''
 # remove previous output if exists
-file_path = "Vatican/new_table.txt"
+file_path = "Vatican/CCC_table.txt"
 if os.path.exists(file_path):
     os.remove(file_path)
 
