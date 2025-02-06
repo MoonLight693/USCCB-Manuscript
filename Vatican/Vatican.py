@@ -111,7 +111,7 @@ b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
 paragraph = paragraph[:i-1] + b + paragraph[i+1:] # reconstruct the list with the stitch and skip
 
 for i in range(len(paragraph)):
-    paragraph[i] = "PROLOGUE " + paragraph[i]
+    paragraph[i] = "0 " + paragraph[i]
 
 ''' Write to CSV: initialization'''
 # remove previous output if exists
@@ -126,7 +126,7 @@ for p in paragraph: f.write(p + "\n")
 f.close()
 
 page = "P2"
-while page != "PF":
+while page != "P9":
     paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
     paragraph = stitching(paragraph)
     appending(paragraph, file_path)

@@ -13,4 +13,4 @@ def convert_pdfs_to_text(input_dir, output_dir):
         with open(output_path, 'w', encoding='utf-8') as text_file:
             text_file.write(text)
 
-# convert_pdfs_to_text("USCCB Test Input Directory", "USCCB Test Output Directory")
+convert_pdfs_to_text("USCCB Test Input Directory", "USCCB Test Output Directory")
