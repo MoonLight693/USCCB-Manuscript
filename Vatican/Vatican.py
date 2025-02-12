@@ -38,16 +38,26 @@ def parsing(URL):
 
 def stitching(paragraph):
     ''' stitch the paragraphs together so each element is one CCC paragraph '''
+    
+    banned = ['Part One: the Profession of Faith','Part Two: the Sacraments of Faith', 'Part Three: the Life of Faith',
+              'Part Four: Prayer in the Life of Faith']
+    
     x = len(paragraph) - 1
     i=0
+    
+    while i < x:
+        '''This loop removes banned phrases/subheaders that aren't paragraphs.'''
+        if paragraph[i] in banned:
+            print(f"popped: {paragraph.pop(i)}")
+            x-=1
+        else: i+=1
+    
+    i = 0
     while i < x:
         if not paragraph[i][0].isdigit() and i == 0:
             # if there are additional strings that are not CCC at the beginning of the paragraph list, remove them
             paragraph.pop(0)
-            x -= 1
-        elif paragraph[i][-1] != ".":
-            paragraph.pop(i)
-            x -= 1
+            x -= 1      
         elif not paragraph[i][0].isdigit():
             # if the start of the string is not the CCC number and is not the first paragraph in the list
             b = [''.join(paragraph[i-1:i+1])]  # join the current and last elements
@@ -69,6 +79,7 @@ def appending(paragraph, file_path):
     # Assisted by Dominic Antony
     f = open(file_path, "a")
     for p in paragraph: f.write(p + "\n")
+    f.write("\n")
     f.close()
 
 def page_next(page):
@@ -125,9 +136,11 @@ f = open(file_path, "w")
 for p in paragraph: f.write(p + "\n")
 f.close()
 
-page = "P2"
-while page != "P9":
+page = "P5"
+while page != "P6":
     paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
+    #print(paragraph)
     paragraph = stitching(paragraph)
+    #print(paragraph)
     appending(paragraph, file_path)
     page = page_next(page)
