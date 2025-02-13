@@ -19,7 +19,7 @@ def page_next(page):
     - increament to 37th page
     - increment after 37th page
     '''
-    print(f'length: {len(page_list)}')
+    #print(f'length: {len(page_list)}')
     if len(page_list) == 2:
         if page_list[-1] != "Z":
             page_list[-1] = iterate[iterate.index(page_list[-1]) + 1]
@@ -39,3 +39,9 @@ def page_next(page):
 #print(page)
 #page = page_next(page)
 #print(page)
+page = "P2"
+count = 0
+while page != "PAE":
+    count += 1
+    page = page_next(page)
+print(f'count: {count}')
