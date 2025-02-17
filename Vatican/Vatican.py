@@ -100,7 +100,26 @@ def stitching(paragraph):
               '"Buried with Christ. . ."', 'IN BRIEF', 'IN BRIEF', 'I. THE HISTORICAL AND TRANSCENDENT EVENT', 'The empty tomb', 'The appearances of the Risen One',
               "The condition of Christ's risen humanity", 'The Resurrection as transcendent event', 'II. THE RESURRECTION - A WORK OF THE HOLY TRINITY',
               'III. THE MEANING AND SAVING SIGNIFICANCE OF THE RESURRECTION', 'IN BRIEF', 'Christ already reigns through the Church. . .'
-              '. . . until all things are subjected to him', 'The glorious advent of Christ, the hope of Israel', "The Church's ultimate trial"]
+              '. . . until all things are subjected to him', 'The glorious advent of Christ, the hope of Israel', "The Church's ultimate trial",
+              "The proper name of the Holy Spirit", "Titles of the Holy Spirit", "Symbols of the Holy Spirit", "In creation", "The Spirit of the promise",
+              "In Theophanies and the Law", "In the Kingdom and the Exile", "Expectation of the Messiah and his Spirit", "John, precursor, prophet, and baptist",
+              '"Rejoice, you who are full of grace"', 'In her, the "wonders of God" that the Spirit was to fulfill in Christ and the Church began to be manifested:',
+              "Christ Jesus", "Pentecost", "The Holy Spirit - God's gift", "The Holy Spirit and the Church", "I. NAMES AND IMAGES OF THE CHURCH",
+              "Symbols of the Church", "II. THE CHURCH'S ORIGIN, FOUNDATION AND MISSION", "A plan born in the Father's heart", "The Church - foreshadowed from the world's beginning",
+              "The Church - prepared for in the Old Covenant", "The Church - instituted by Christ Jesus", "The Church - revealed by the Holy Spirit",
+              "The Church - perfected in glory", "III. THE MYSTERY OF THE CHURCH", "The Church - both visible and spiritual", "The Church - mystery of men's union with God",
+              "The universal Sacrament of Salvation", "IN BRIEF", "I. THE CHURCH - PEOPLE OF GOD", "Characteristics of the People of God", "A priestly, prophetic, and royal people",
+              "II. THE CHURCH - BODY OF CHRIST", "The Church is communion with Jesus", '"One Body"', '"Christ is the Head of this Body"',
+              "The Church is the Bride of Christ", "III. THE CHURCH IS THE TEMPLE OF THE HOLY SPIRIT", "Charisms", "IN BRIEF", "I. THE CHURCH IS ONE",
+              '"The sacred mystery of the Church\'s unity" (UR 2)', "Wounds to unity", "Toward unity", "II THE CHURCH IS HOLY",
+              "III. THE CHURCH IS CATHOLIC", 'What does "catholic" mean?', 'Each particular Church is "catholic"', "Who belongs to the Catholic Church?",
+              "The Church and non-Christians", '"Outside the Church there is no salvation"', "Mission - a requirement of the Church's catholicity",
+              "IV. THE CHURCH IS APOSTOLIC", "The Apostles' mission", "The bishops - successors of the apostles", "The apostolate", "IN BRIEF",
+              "I. THE HIERARCHICAL CONSTITUTION OF THE CHURCH", "Why the ecclesial ministry?", "The episcopal college and its head, the Pope", "The teaching office",
+              "The sanctifying office", "The governing office", "II. THE LAY FAITHFUL", "The vocation of lay people", "Participation in Christ's prophetic office",
+              "Participation in Christ's kingly office", "III. THE CONSECRATED LIFE", "Evangelical counsels, consecrated life", "One great tree, with many branches",
+              "The eremitic life", "Consecrated virgins", "Religious life", "Secular institutes", "Societies of apostolic life", "Consecration and mission: proclaiming the King who is corning",
+              "IN BRIEF", "I. COMMUNION IN SPIRITUAL GOODS", "II. THE COMMUNION OF THE CHURCH OF HEAVEN AND EARTH", "IN BRIEF"]
     
     x = len(paragraph) - 1
     i=0
