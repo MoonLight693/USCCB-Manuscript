@@ -15,16 +15,28 @@ import sqlite3
 conn = sqlite3.connect("usccb_project.db")
 cursor = conn.cursor()
 
+#Create the CCC table
+cursor.execute('''
+               CREATE TABLE (
+                   ccc_number txt, paragrapgh interger, txt Text
+                   )
+                   ''')
+
 #Create the CCC table 
-with open("CCC_table.txt", "r", encoding="utf-8") as file:
+with open("Vatican//CCC_table.txt", "r", encoding="utf-8") as file:
     for line in file:
-        parts = line.strip().split("|")
+        parts = line.strip().split("$")
         if len(parts) == 3:
             ccc_number, paragrapgh, txt = parts
-            cursor.execute ('''
-                            INSERT INTO ccc (ccc_number, paragrapgh, txt)
-                            VALUES (? ? ? )
-                            ''', (ccc_number, int(paragrapgh), txt ))
+            try:
+                paragrapgh = int(paragrapgh) #convert paragrapgh to interger
+                cursor.execute ('''
+                            INSERT INTO ccc (ccc_number, paragrapgh)
+                            VALUES (? ? )
+                            ''', (ccc_number, int(paragrapgh) ))
+            except ValueError:
+                print(f"Skipping invalid paragrapgh number: {paragrapgh}")
+                
 
 #Commit changes and close connection 
 conn.commit()
