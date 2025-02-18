@@ -15,15 +15,8 @@ import sqlite3
 conn = sqlite3.connect("usccb_project.db")
 cursor = conn.cursor()
 
-#Create the CCC table
-cursor.execute('''
-               CREATE TABLE (
-                   ccc_number txt, paragrapgh interger
-                   )
-                   ''')
-
 #Create the CCC table 
-with open("Vatican//CCC_table.txt", "r", encoding="utf-8") as file:
+with open("State Machine Output\\Jesus 2 in progress latest.txt", "r", encoding="utf-8") as file:
     for line in file:
         parts = line.strip().split("$")
         if len(parts) == 3:
