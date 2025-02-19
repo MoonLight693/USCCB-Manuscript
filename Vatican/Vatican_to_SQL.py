@@ -40,7 +40,7 @@ conn.close()
 print("Database successfully initialized.")
 
 
-'''Josh's section'''
+'''Josh's section--------------------------------------------------------------------------------'''
 def to_table(path, table_name):
     '''give the file path to the txt and the name of the table you want created in the database'''
     # Connecting to sqlite 
