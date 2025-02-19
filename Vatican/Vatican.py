@@ -13,7 +13,6 @@ Links to additional resources:
 from lxml import etree
 import requests
 from io import StringIO
-import os
 
 def parsing(URL):
     '''Used to grab paragraphs from Vatican catechism website. If the tree returns blank, autocheckes for italicized texted instead.'''

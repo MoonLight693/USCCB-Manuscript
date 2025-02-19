@@ -1,4 +1,5 @@
 from Vatican.Vatican import *
+import os 
 ''' 
 start system
 gets the vatican CCC from online and stores them in a db.
