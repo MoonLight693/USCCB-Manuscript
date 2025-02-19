@@ -40,6 +40,7 @@ conn.close()
 print("Database successfully initialized.")
 
 def to_table(path, table_name):
+    '''give the file path to the txt and the name of the table you want created in the database'''
     # Connecting to sqlite 
     # Create an SQLite database
     conn = sqlite3.connect("usccb_project.db")
