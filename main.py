@@ -58,14 +58,3 @@ to_table("/home/whitmercraft939/USCCB-Manuscript-3/State Machine Output/Test Tex
 
 
 # Experiment
-conn = sqlite3.connect("usccb_project.db")
-cursor = conn.cursor()
-
-cursor.execute("")
-result = cursor.fetchall()
-
-for row in result:
-    print(row[0])
-
-conn.commit()
-conn.close()

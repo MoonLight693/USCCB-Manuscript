@@ -44,7 +44,6 @@ print("Database successfully initialized.")
 def to_table(path, table_name):
     '''give the file path to the txt and the name of the table you want created in the database'''
     # Connecting to sqlite 
-    # Create an SQLite database
     conn = sqlite3.connect("usccb_project.db")
     cursor = conn.cursor()
     
@@ -57,10 +56,20 @@ def to_table(path, table_name):
     f = open(path, "r")
     for x in f:
         z = x.split("$")
-        print(z)
         exe = f"insert into {table_name}(CCC_number, paragraph) values "
         cursor.execute(exe + '($1, $2)', z)
     
+    #Commit changes and close connection 
+    conn.commit()
+    conn.close()
+    
+def delete_table(table_name):
+    '''deletes table of by name from the database if exists.'''
+    # Connecting to sqlite 
+    conn = sqlite3.connect("usccb_project.db")
+    cursor = conn.cursor()
+    #drop table if exist
+    cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
     #Commit changes and close connection 
     conn.commit()
     conn.close()
