@@ -26,7 +26,7 @@ for p in paragraph: f.write(p + "\n")
 f.close()
 
 page = "P2"
-while page != "P5":
+while page != "P20":
     paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
     #print(paragraph)
     
