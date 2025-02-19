@@ -52,8 +52,8 @@ def parsingI(URL):
     return paragraph
 
 '''read banned words for the stitching function of the Vatican CCC.'''
-with open("Vatican/banned.txt", "r") as f:
-    banned = f.readlines()
+with open("Vatican/banned.txt", "r") as file:
+    banned = [line.rstrip('\n') for line in file.readlines()]
 
 def stitching(paragraph):
     ''' stitch the paragraphs together so each element is one CCC paragraph '''
@@ -62,10 +62,11 @@ def stitching(paragraph):
     
     while i < x:
         '''This loop removes banned phrases/subheaders that aren't paragraphs.'''
-        if paragraph[i] in banned:
-            #print(f"popped: {paragraph.pop(i)}")
-            paragraph.pop(i)
+        if paragraph[i] in banned or paragraph[i] == 'Part One: the Profession of Faith':
+            print(f"popped: {paragraph.pop(i)}")
+            #paragraph.pop(i)
             x-=1
+            #print(f'Popped:{paragraph[i]}')
         else: i+=1
     
     i = 0
