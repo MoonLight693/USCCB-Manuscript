@@ -26,7 +26,7 @@ for p in paragraph: f.write(p + "\n")
 f.close()
 
 page = "P2"
-while page != "P20":
+while page != "P6":
     paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
     #print(paragraph)
     
@@ -52,3 +52,19 @@ while page != "P20":
 from Vatican.Vatican_to_SQL import *
 
 to_table("/home/whitmercraft939/USCCB-Manuscript-3/State Machine Output/Test Text.txt", "table1")
+
+
+
+
+# Experiment
+conn = sqlite3.connect("usccb_project.db")
+cursor = conn.cursor()
+
+cursor.execute("")
+result = cursor.fetchall()
+
+for row in result:
+    print(row[0])
+
+conn.commit()
+conn.close()
