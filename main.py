@@ -27,7 +27,7 @@ for p in paragraph: f.write(p + "\n")
 f.close()
 
 page = "P2"
-while page != "P6":
+while page != "P20":
     paragraph = parsing("https://www.vatican.va/archive/ENG0015/__" + page + ".HTM")
     #print(paragraph)
     
@@ -52,7 +52,7 @@ while page != "P6":
 '''Importing this file adds the vatican web CCC to the database'''
 from Vatican.Vatican_to_SQL import *
 
-to_table("/home/whitmercraft939/USCCB-Manuscript-3/State Machine Output/Test Text.txt", "table1")
+to_table("/home/whitmercraft939/USCCB-Manuscript-3/State Machine Output/Test Text.txt", "Test_Text")
 
 
 
