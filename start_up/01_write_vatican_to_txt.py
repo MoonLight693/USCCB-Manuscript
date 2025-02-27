@@ -48,13 +48,3 @@ while page != "P20":
         appending(paragraph, file_path)
     
     page = page_next(page)
-
-'''Importing this file adds the vatican web CCC to the database'''
-from Vatican.Vatican_to_SQL import *
-
-to_table("/home/whitmercraft939/USCCB-Manuscript-3/State Machine Output/Test Text.txt", "Test_Text")
-
-
-
-
-# Experiment

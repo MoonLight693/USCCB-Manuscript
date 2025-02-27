@@ -8,38 +8,6 @@ Links to additional resources:
 '''
 import sqlite3
 
-# Connecting to sqlite 
-# Create an SQLite database
-conn = sqlite3.connect("usccb_project.db")
-cursor = conn.cursor()
-
-#drop table if exist
-cursor.execute("DROP TABLE IF EXISTS Vatican")
-
-#Create the CCC table
-cursor.execute('''
-               CREATE TABLE Vatican (
-                   ccc_number txt, paragraph txt
-                   )
-                   ''')
-
-#Create the CCC table 
-f = open("/home/whitmercraft939/USCCB-Manuscript-3/Vatican/CCC_table.txt", "r")
-for x in f:
-    y = x.split("$")
-    cursor.execute('''
-                insert into Vatican(CCC_number, paragraph) values ($1, $2)
-                ''', y)
-
-cursor.execute(f"DROP TABLE IF EXISTS Test_text")
-
-#Commit changes and close connection 
-conn.commit()
-conn.close()
-
-print("Database successfully initialized.")
-
-
 '''Josh's section--------------------------------------------------------------------------------'''
 def to_table(path, table_name):
     '''give the file path to the txt and the name of the table you want created in the database'''
@@ -62,6 +30,7 @@ def to_table(path, table_name):
     #Commit changes and close connection 
     conn.commit()
     conn.close()
+'''----------------------------------------------------------------------------------------------'''
     
 def delete_table(table_name):
     '''deletes table of by name from the database if exists.'''
@@ -73,3 +42,38 @@ def delete_table(table_name):
     #Commit changes and close connection 
     conn.commit()
     conn.close()
+
+def reference_query():
+    # Connect to SQLite database
+    conn = sqlite3.connect("usccb_project.db")
+    cursor = conn.cursor()
+
+    # Query the database
+    cursor.execute(f"""SELECT Jesus_2.paragraph, Vatican.ccc_number, Vatican.paragraph
+                   FROM Jesus_2, Vatican
+                   WHERE Jesus_2.ccc_number = Vatican.ccc_number
+                   """)
+    columns = [description[0] for description in cursor.description]
+    rows = cursor.fetchall()
+
+    # Generate HTML table output
+    html_table = """
+    <table>
+        <tr>
+            {}
+        </tr>
+        {}
+    </table>
+    """.format(
+        "".join(f"<th>{col}</th>" for col in columns),
+        "".join("<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>" for row in rows)
+    )
+
+    # Save HTML table to a file
+    with open("output.html", "w", encoding="utf-8") as file:
+        file.write(html_table)
+
+    # Close the database connection
+    conn.close()
+
+    print("HTML table generated: output.html")

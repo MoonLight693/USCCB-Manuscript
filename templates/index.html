@@ -1,0 +1,43 @@
+<!--Code originated from 
+https://www.w3schools.com/bootstrap/bootstrap_filters.asp
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+  <button onclick="fetchTable()">Generate Table</button>
+  <div id="table-container"></div>
+
+  <script>
+      function fetchTable() {
+          fetch('/generate_table')
+          .then(response => response.json())
+          .then(data => {
+              document.getElementById('table-container').innerHTML = data.table;
+          })
+          .catch(error => console.error('Error:', error));
+      }
+  </script>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+</body>
+</html>
