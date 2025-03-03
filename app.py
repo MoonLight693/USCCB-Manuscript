@@ -26,7 +26,7 @@ def generate_table():
 
     # Generate HTML table output
     html_table = """
-    <table border='1'>
+    <table id="myTable" border='1'>
         <tr>{}</tr>
         {}
     </table>
