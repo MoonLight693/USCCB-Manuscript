@@ -4,7 +4,6 @@ from io import BytesIO
 from pdf2image import convert_from_path
 import pytesseract
 import config
-import re
 import os  # Import the os module for file path operations
 
 # Initialize the client (Corrected client initialization)
