@@ -40,16 +40,8 @@ def extract_images_and_text_from_pdf(pdf_path):
 
     return image_data, text_data # Return both image_data and text_data
 
-
-def sanitize_input(text):
-    # Remove or escape characters that might cause issues in the request
-    sanitized_text = re.sub(r'[\[\]{}]', '', text)  # Remove brackets and curly braces
-    return sanitized_text
-
-def ask_gemini_about_pdf(pdf_path, question):
+def ai_state_machine(pdf_path, question):
     image_data, extracted_text_data = extract_images_and_text_from_pdf(pdf_path) # Get both image_data and extracted_text
-
-    sanitized_question = sanitize_input(question) # Sanitize the question
 
     contents = [] # List to hold content for each page
 
@@ -67,7 +59,7 @@ def ask_gemini_about_pdf(pdf_path, question):
                     }
                 },
                 { # Text Part - Include extracted text for each page
-                    "text": f"Page {i+1} OCR Text:\n{page_text}\n\nQuestion: {sanitized_question}" # Combine page text and question
+                    "text": f"Page {i+1} OCR Text:\n{page_text}\n\nQuestion: {question}" # Combine page text and question
                 }
             ],
             "role": "user" # Role of the content
@@ -116,7 +108,7 @@ print(f"Found {len(pdf_files_in_directory)} PDF files in {input_directory}") # D
 for pdf_filename in pdf_files_in_directory:
     pdf_path = os.path.join(input_directory, pdf_filename)
     print(f"\nProcessing PDF: {pdf_path}") # Debug print: Processing start for each PDF
-    response = ask_gemini_about_pdf(pdf_path, question)
+    response = ai_state_machine(pdf_path, question)
 
     # --- Construct output filename based on input PDF ---
     pdf_filename_base = os.path.splitext(os.path.basename(pdf_path))[0] # Get filename without extension
