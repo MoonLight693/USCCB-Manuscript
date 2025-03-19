@@ -74,7 +74,8 @@ def ai_state_machine(pdf_path, instructions):
     # Use generate_content with the list of content dictionaries
     response = model.generate_content(
         contents=contents, # Now passing a list of content dictionaries (one per page)
-        generation_config=genai.GenerationConfig(temperature=0.7, candidate_count=1)
+        generation_config=genai.GenerationConfig(temperature=0.7, candidate_count=1),
+        request_options={"timeout": 300}  # Increase timeout (e.g., 5 minutes)
     )
 
     return response
