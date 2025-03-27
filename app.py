@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 import sqlite3
 
 app = Flask(__name__)
@@ -9,16 +9,19 @@ def home():
 
 @app.route('/generate_table', methods=['GET'])
 def generate_table():
+    table_name = request.args.get('table_name')  # Get table_name from query parameters
+    if not table_name:
+        return jsonify({"error": "Missing table_name parameter"}), 400
+
     # Connect to SQLite database
     conn = sqlite3.connect("usccb_project.db")
     cursor = conn.cursor()
 
     # Query the database
-    table_name = "your_table_name"
-    cursor.execute("""
-    SELECT Jesus_2.paragraph, Vatican.ccc_number, Vatican.paragraph
-    FROM Jesus_2
-    INNER JOIN Vatican ON Jesus_2.ccc_number = Vatican.ccc_number
+    cursor.execute(f"""
+    SELECT {table_name}.paragraph, Vatican.ccc_number, Vatican.paragraph
+    FROM {table_name}
+    INNER JOIN Vatican ON {table_name}.ccc_number = Vatican.ccc_number
     """)
 
     columns = [description[0] for description in cursor.description]

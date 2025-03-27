@@ -43,15 +43,15 @@ def delete_table(table_name):
     conn.commit()
     conn.close()
 
-def reference_query():
+def reference_query(table_name):
     # Connect to SQLite database
     conn = sqlite3.connect("usccb_project.db")
     cursor = conn.cursor()
 
     # Query the database
-    cursor.execute(f"""SELECT Jesus_2.paragraph, Vatican.ccc_number, Vatican.paragraph
-                   FROM Jesus_2, Vatican
-                   WHERE Jesus_2.ccc_number = Vatican.ccc_number
+    cursor.execute(f"""SELECT {table_name}.paragraph, Vatican.ccc_number, Vatican.paragraph
+                   FROM {table_name}, Vatican
+                   WHERE {table_name}.ccc_number = Vatican.ccc_number
                    """)
     columns = [description[0] for description in cursor.description]
     rows = cursor.fetchall()

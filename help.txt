@@ -30,3 +30,9 @@ in the terminal
 installing virtual Environments
 the .gitignore should prevent you from uploading your Environments,
 so you only need to reinstall each time.
+
+-----
+extra installs pip needed
+sudo apt update
+sudo apt-get install poppler-utils
+sudo apt install tesseract-ocr

@@ -52,7 +52,7 @@ def parsingI(URL):
     return paragraph
 
 '''read banned words for the stitching function of the Vatican CCC.'''
-with open("Vatican/banned.txt", "r") as file:
+with open("start_up/Vatican/banned.txt", "r") as file:
     banned = [line.rstrip('\n') for line in file.readlines()]
 
 def stitching(paragraph):
