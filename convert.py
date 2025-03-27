@@ -4,7 +4,7 @@ import re
 
 def txt_into_database(folder_path: str) -> None:
     # Connecting to sqlite 
-    conn = sqlite3.connect("usccb_project.db")
+    conn = sqlite3.connect("demo.db")
     cursor = conn.cursor()
 
     # Iterate through all .txt files in the folder

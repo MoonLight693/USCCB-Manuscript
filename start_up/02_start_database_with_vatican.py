@@ -3,7 +3,7 @@ from Vatican.Vatican_to_SQL import *
 def start_database_with_vatican() -> None:
     # Connecting to sqlite 
     # Create an SQLite database
-    conn = sqlite3.connect("usccb_project.db")
+    conn = sqlite3.connect("demo.db")
     cursor = conn.cursor()
 
     #drop table if exist

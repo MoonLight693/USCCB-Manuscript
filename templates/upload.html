@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Upload Section -->
+    <div class="text-center mb-4">
+        <h1 class="text-primary">Upload a PDF</h1>
+
+        <!-- Flash Messages -->
+        <div class="row mb-4">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="col-12">
+                        <div class="alert alert-info" role="alert">
+                            <ul class="list-unstyled">
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <form action="/upload" method="POST" enctype="multipart/form-data" class="mb-4">
+            {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+            <div class="form-row justify-content-center mb-3">
+                <div class="col-auto">
+                    <input
+                        type="file"
+                        name="file"
+                        accept="application/pdf"
+                        required
+                        class="form-control"
+                        style="max-width: 300px"
+                    />
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
+            </div>
+        </form>            
+    </div>
+
+    <!-- PDF Manager Section -->
+    <div class="text-center mb-4">
+        <h1 class="text-primary">PDF Manager</h1>
+    </div>
+
+    <!-- Search, Filter & Clear Section -->
+    <div class="mb-4">
+        <div class="d-flex">
+            <input
+                id="search-input"
+                type="text"
+                class="form-control mr-2"
+                placeholder="Search files by filename"
+            />
+            <button id="clear-filters-button" class="btn btn-secondary">Clear Filters</button>
+        </div>
+
+        <div class="mt-3">
+            <h5>Filter by Status:</h5>
+            <div class="form-check">
+                <input class="form-check-input filter-checkbox" type="checkbox" value="Completed" id="completed-filter">
+                <label class="form-check-label" for="completed-filter">Completed</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input filter-checkbox" type="checkbox" value="Pending" id="pending-filter">
+                <label class="form-check-label" for="pending-filter">Pending</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table to display files -->
+    <table class="table table-bordered table-striped">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th class="text-center">Filename</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Date Submitted</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr id="file-{{ file[0] }}">
+                <td class="text-start">
+                    <a href="{{ url_for('view_pdf', file_id=file[0]) }}">{{ file[1] }}</a>
+                </td>
+                <td class="text-center">
+                    <form action="{{ url_for('update_status', file_id=file[0]) }}" method="POST">
+                        {{ form.hidden_tag() }}  <!-- Include CSRF token here -->
+                        <select name="status" class="form-control" onchange="this.form.submit()">
+                            <option value="in review" {% if file[3] == 'in review' %}selected{% endif %}>In Review</option>
+                            <option value="review complete" {% if file[3] == 'review complete' %}selected{% endif %}>Review Complete</option>
+                        </select>
+                    </form>
+                </td>
+                <td class="text-center">{{ file[4] }}</td>
+                <td class="text-center actions">
+                    <form action="/delete/{{ file[0] }}" method="POST" style="display: inline;">
+                        {{ form.hidden_tag() }}  <!-- Add this line to include CSRF token -->
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>                    
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

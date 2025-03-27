@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}PDF Viewer{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pdfjs/web/viewer.css') }}">
+<script type="module" src="{{ url_for('static', filename='pdfjs/web/viewer.mjs') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
+
+<!-- Remove savePdfPeriodically logic -->
+<!--
+<script>
+    async function savePdfPeriodically() {
+        ...existing code...
+    }
+
+    window.onload = function () {
+        const checkViewerReady = setInterval(function() {
+            ...existing code...
+        }, 500);  
+    };
+</script>
+-->
+{% endblock %}
+
+{% block content %}
+<div class="container" style="display: flex; flex-wrap: wrap;">
+    <!-- PDF Viewer Section -->
+    <div class="pdf-container" style="flex: 1; min-width: 50%; padding: 10px;">
+        <iframe 
+            id="pdf-viewer"
+            src="{{ url_for('static', filename='pdfjs/web/viewer.html') }}?file={{ url_for('uploaded_file', filename=filename) }}&file_id={{ file_id }}" 
+            width="100%" 
+            height="100%"
+            style="border: none;">
+        </iframe>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-container" style="flex: 1; min-width: 50%; padding: 10px;">
+        <button onclick="fetchTable()">Generate Table</button>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+        <div id="table-container"></div>
+    </div>
+</div>
+
+<script>
+    function fetchTable() {
+        const pdfFilename = "{{ filename }}";
+        const tableName = pdfFilename.trim().replace('.pdf', '').replace(/ /g, '_'); // Replace spaces with underscores
+        
+        fetch(`/generate_table?table_name=${tableName}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('table-container').innerHTML = data.table;
+            } else {
+                console.error('Error:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<script>
+$(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+});
+</script>
+
+{% endblock %}
