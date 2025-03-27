@@ -97,7 +97,7 @@ Reference$Quote
 353$This is an example.
 Glossary$Example. This is an example. Words.
 
-: Repeat this for every quote. Ensure that you get footnotes and direct quotes. I just need the quote and reference number so if you cannot find one or the other then do not include it. The Reference$Quote format is very strict so do not respond with anything else. Do not include the quotation marks when grabing the quote.
+: Repeat this for every quote. Ensure that you get footnotes and direct quotes such as Bible quotes. I just need the quote and reference number so if you cannot find one or the other then do not include it. The Reference$Quote format is very strict so do not respond with anything else. Do not include the quotation marks when grabing the quote.
 """
 
 # --- Process all PDF files in input directory ---
