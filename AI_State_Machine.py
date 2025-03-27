@@ -69,7 +69,7 @@ def ai_state_machine(pdf_path, instructions):
     print(f"Sending {len(contents)} pages from {pdf_path} to Gemini API...") # Debug print: Total pages being sent
 
     # Instantiate the GenerativeModel (ensure you use a model that supports images - vision models)
-    model = genai.GenerativeModel("models/gemini-1.5-pro-latest")
+    model = genai.GenerativeModel("models/gemini-2.0-flash-thinking-exp")
 
     # Use generate_content with the list of content dictionaries
     response = model.generate_content(
@@ -85,19 +85,34 @@ output_directory = "State Machine Output"  # **Hardcoded output directory - CHAN
 input_directory = "USCCB Test Input Directory" # **Hardcoded input directory - CHANGE THIS TO YOUR INPUT DIRECTORY**
 
 instructions = """
-Extract all Catechism of the Catholic Church quotes abbreviated as 'CCC' in the format:
+Extract all quotes from the Catechism of the Catholic Church (CCC) and any other references in the format:
 
 Reference$Quote
-Reference$Quote
-Reference$Quote
 
-: An example of what it might look like:
+Example output:
 
+123$This is a quote.  
+353$This is an example.  
+Glossary$Example. This is an example. Words.  
+Matthew 22:37-39$You shall love the Lord your God with all your heart, with all your soul, and with all your mind. This is the greatest and first commandment. And a second is like it: You shall love your neighbor as yourself.  
+John 20:28$My Lord and my God!
+
+Follow these strict rules:
+Extract only direct quotes with their reference numbers.
+Format must always be Reference$Quote without quotation marks.
+If a reference or quote is missing, exclude it.
+Include both footnotes and direct quotes.
+Your task is to extract and return only the formatted list, with no additional text.
+CCC references and quotes should look like
+CCC 123$This is a quote.
+NOT
 123$This is a quote.
-353$This is an example.
-Glossary$Example. This is an example. Words.
 
-: Repeat this for every quote. Ensure that you get footnotes and direct quotes such as Bible quotes. I just need the quote and reference number so if you cannot find one or the other then do not include it. The Reference$Quote format is very strict so do not respond with anything else. Do not include the quotation marks when grabing the quote.
+a quote could look like:
+The  Bible  explicitly  declares  Jesus  as  the  Son  of  God,  affirming  His  divine  nature.  In  John  1:1,  it 
+ is  written,  "In  the  beginning  was  the  Word,  and  the  Word  was  with  God,  and  the  Word  was  God." 
+the output should be:
+John 1:1$In the beginning was the Word, and the Word was with God, and the Word was God.
 """
 
 # --- Process all PDF files in input directory ---
