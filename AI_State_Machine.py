@@ -1,154 +1,178 @@
-import google.generativeai as genai
-from PIL import Image  # Added import for Pillow Image
-from io import BytesIO
+import os
+import shutil
+import requests
+import json
 from pdf2image import convert_from_path
 import pytesseract
-import config
-import os  # Import the os module for file path operations
+from PIL import Image
+import re
 
-# Initialize the client (Corrected client initialization)
-genai.configure(api_key=config.API_KEY)
+def extract_quoted_and_cited(text):
+    """
+    Extracts text within standard or smart quotes and their immediately following citations in parentheses.
+    Removes newline characters from the extracted content, replacing them with spaces.
+    """
+    extracted_parts = []
+    # Regex to find text within standard or smart double quotes
+    quote_pattern = r'["“”](.*?)(?:"|”)'
+    matches = re.finditer(quote_pattern, text, re.DOTALL)
 
+    for match in matches:
+        quote = match.group(1).strip().replace('\n', ' ')  # Replace enters with spaces in the quote
+        # Try to find a citation immediately after the quote
+        citation_match = re.search(r'\s*\(([^)]*)\)', text[match.end():])
+        if citation_match:
+            citation = citation_match.group(1).strip().replace('\n', ' ')  # Replace enters with spaces in the citation
+            extracted_parts.append(f'"{quote}" ({citation})')
+        else:
+            extracted_parts.append(f'"{quote}"')
 
-def convert_pdf_to_images(pdf_path):
-    images = convert_from_path(pdf_path)  # Convert PDF pages to images
-    return images
+    return " ".join(extracted_parts)
 
-def extract_text_from_image(image):
-    # Use pytesseract to extract text from image
-    text = pytesseract.image_to_string(image)
-    return text
+# Assuming your extract_text_from_pdf function is defined as follows:
+def extract_text_from_pdf(pdf_path):
+    try:
+        images = convert_from_path(pdf_path)
+        extracted_text = ""
+        for i, image in enumerate(images):
+            print(f"Processing page {i+1}...")
+            text = pytesseract.image_to_string(image)
+            extracted_text += text
+            extracted_text += "\n\n"
+        return extracted_text.strip()
+    except Exception as e:
+        print(f"An error occurred during PDF text extraction: {e}")
+        return None
 
-def extract_images_and_text_from_pdf(pdf_path):
-    images = convert_pdf_to_images(pdf_path)
-    text_data = [] # Changed variable name to text_data to avoid confusion
-    image_data = []
-
-    for i, img in enumerate(images): # Added enumerate to track page number (index i)
-        # Convert image to byte array
-        img_byte_array = BytesIO()
-        img.save(img_byte_array, format='PNG')
-        img_byte_array.seek(0)  # Rewind the byte stream
-
-        # Extract text from image (Uncommented to enable text extraction)
-        extracted_text = extract_text_from_image(img)
-        text_data.append(extracted_text) # Append extracted text
-        image_data.append(img_byte_array.getvalue()) # Append image data
-
-        print(f"Extracted data from page {i+1} of {pdf_path}") # Debug print: Page processing confirmation
-
-    return image_data, text_data # Return both image_data and text_data
-
-def ai_state_machine(pdf_path, instructions):
-    image_data, extracted_text_data = extract_images_and_text_from_pdf(pdf_path) # Get both image_data and extracted_text
-
-    contents = [] # List to hold content for each page
-
-    for i, img_bytes in enumerate(image_data): # Enumerate to track page number (index i)
-        pil_image = Image.open(BytesIO(img_bytes)) # Open image bytes with Pillow
-        page_text = extracted_text_data[i] # Get corresponding text for the page
-
-        # Construct content using dictionaries - Corrected structure
-        content_dict = {
-            "parts": [
-                { # Image Part
-                    "inline_data": { # "inline_data" for image blob
-                        "mime_type": "image/png",
-                        "data": img_bytes  # Pass image byte data directly
-                    }
-                },
-                { # Text Part - Include extracted text for each page
-                    "text": f"Page {i+1} OCR Text:\n{page_text}\n\nInstructions: {instructions}" # Combine page text and instructions
-                }
-            ],
-            "role": "user" # Role of the content
+def interact_with_ollama(prompt, model="llama3.2"):
+    try:
+        url = "http://localhost:11434/api/generate"
+        headers = {"Content-Type": "application/json"}
+        data = {
+            "prompt": prompt,
+            "model": model,
+            "stream": False
         }
-        contents.append(content_dict) # Append the dictionary to contents
-        print(f"Prepared content for page {i+1} of {pdf_path}") # Debug print: Content preparation confirmation
 
-    print(f"Sending {len(contents)} pages from {pdf_path} to Gemini API...") # Debug print: Total pages being sent
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response.raise_for_status()
 
-    # Instantiate the GenerativeModel (ensure you use a model that supports images - vision models)
-    model = genai.GenerativeModel("models/gemini-2.0-flash-thinking-exp")
+        full_response = ""
+        for line in response.text.splitlines():
+            if line.strip():
+                try:
+                    json_line = json.loads(line)
+                    if 'response' in json_line:
+                        full_response += json_line['response']
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding JSON line: {e}, line: {line}")
+                    continue
 
-    # Use generate_content with the list of content dictionaries
-    response = model.generate_content(
-        contents=contents, # Now passing a list of content dictionaries (one per page)
-        generation_config=genai.GenerationConfig(temperature=0.7, candidate_count=1),
-        request_options={"timeout": 300}  # Increase timeout (e.g., 5 minutes)
-    )
+        return full_response.strip()
 
-    return response
+    except requests.exceptions.RequestException as e:
+        print(f"Error communicating with Ollama: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding Ollama response: {e}")
+        return None
 
-# --- File Output Section ---
-output_directory = "State Machine Output"  # **Hardcoded output directory - CHANGE THIS TO YOUR DESIRED PATH**
-input_directory = "USCCB Test Input Directory" # **Hardcoded input directory - CHANGE THIS TO YOUR INPUT DIRECTORY**
+# 2. Define the main processing function with a return value
+def process_pdf_with_ollama(pdf_file_path, output_folder, done_folder) -> bool:
+    """
+    Extracts text from a PDF, prunes it to keep only quotes and citations,
+    feeds the pruned text to Ollama with instructions,
+    saves the output, and moves the PDF to a done folder.
+    Returns True if the process completes successfully, False otherwise.
 
-instructions = """
-Extract all quotes from the Catechism of the Catholic Church (CCC) and any other references in the format:
+    Args:
+        pdf_file_path (str): The path to the PDF file to process.
+        output_folder (str): The path to the folder where the output text file will be saved.
+        done_folder (str): The path to the folder where the processed PDF will be moved.
 
-Reference$Quote
+    Returns:
+        bool: True if the process was successful, False otherwise.
+    """
+    fixed_instructions = """
+    Extract all Catechism of the Catholic Church (CCC) quotes in this format. It MUST be from CCC do not include ANY quotes from other sources:
 
-Example output:
+    '
+    Reference number$Quote
+    Reference number$Quote
+    Reference number$Quote
+    '
 
-123$This is a quote.  
-353$This is an example.  
-Glossary$Example. This is an example. Words.  
-Matthew 22:37-39$You shall love the Lord your God with all your heart, with all your soul, and with all your mind. This is the greatest and first commandment. And a second is like it: You shall love your neighbor as yourself.  
-John 20:28$My Lord and my God!
+    : Do not include quotation marks in the quote. Do not include CCC just place the number or Glossary if it says Glossary. Do not give a header and do not inlcude spaces between each quote. Include the $ in between the citation number and the quote. The output format is very strict and must follow the rules.
+    """
+    success = False
 
-Follow these strict rules:
-Extract only direct quotes with their reference numbers.
-Format must always be Reference$Quote without quotation marks.
-If a reference or quote is missing, exclude it.
-Include both footnotes and direct quotes.
-Your task is to extract and return only the formatted list, with no additional text.
-CCC references and quotes should look like
-CCC 123$This is a quote.
-NOT
-123$This is a quote.
+    try:
+        print(f"Processing file: {pdf_file_path}")
 
-a quote could look like:
-The  Bible  explicitly  declares  Jesus  as  the  Son  of  God,  affirming  His  divine  nature.  In  John  1:1,  it 
- is  written,  "In  the  beginning  was  the  Word,  and  the  Word  was  with  God,  and  the  Word  was  God." 
-the output should be:
-John 1:1$In the beginning was the Word, and the Word was with God, and the Word was God.
-"""
+        # 1. Extract text from the PDF
+        extracted_text = extract_text_from_pdf(pdf_file_path)
 
-# --- Process all PDF files in input directory ---
-pdf_files_in_directory = [f for f in os.listdir(input_directory) if f.lower().endswith('.pdf')] # List PDF files
+        if extracted_text:
+            print("\n--- Extracted Text Before Pruning ---")
+            print(extracted_text)
+            print("---\n")
 
-print(f"Found {len(pdf_files_in_directory)} PDF files in {input_directory}") # Debug print: Number of PDFs found
+            # Prune the extracted text to keep only quotes and citations
+            pruned_text = extract_quoted_and_cited(extracted_text)
 
-for pdf_filename in pdf_files_in_directory:
-    pdf_path = os.path.join(input_directory, pdf_filename)
-    print(f"\nProcessing PDF: {pdf_path}") # Debug print: Processing start for each PDF
-    response = ai_state_machine(pdf_path, instructions)
+            print("\n--- Pruned Text After Pruning ---")
+            print(pruned_text)
+            print("---\n")
 
-    # --- Construct output filename based on input PDF ---
-    pdf_filename_base = os.path.splitext(os.path.basename(pdf_path))[0] # Get filename without extension
-    output_filename = f"{pdf_filename_base}_gemini_output.txt" # Create output filename
-    output_filepath = os.path.join(output_directory, output_filename)
+            # 2. Create the prompt for Ollama with the pruned text
+            ollama_prompt = f"{fixed_instructions}\n\n---\n{pruned_text}\n---"
 
-    # --- Accumulate AI responses (text only) ---
-    all_responses_text = ""
-    if response.candidates:
-        for candidate in response.candidates:
-            if candidate.content.parts:
-                ai_response_text = candidate.content.parts[0].text # Extract only AI response text
-                all_responses_text += ai_response_text + "\n\n"
+            # 3. Feed the text into Ollama
+            print("Sending pruned text to Ollama...")
+            ollama_response = interact_with_ollama(ollama_prompt)
 
-    # --- File Writing (CONDITIONAL - only if response contains '$') ---
-    if '$' in all_responses_text: # Check if all_responses_text contains '$'
-        try:
-            os.makedirs(output_directory, exist_ok=True) # Create directory if it doesn't exist
-            with open(output_filepath, "w", encoding="utf-8") as outfile:
-                outfile.write(all_responses_text.strip()) # Write to file, strip whitespace
-            print(f"Gemini responses saved to: {output_filepath}")
-        except Exception as e:
-            print(f"Error writing responses to file for {pdf_filename}: {e}")
+            if ollama_response:
+                # 4. Save the output to a text file
+                base_name = os.path.splitext(os.path.basename(pdf_file_path))[0]
+                output_file_name = f"{base_name}.txt"
+                output_path = os.path.join(output_folder, output_file_name)
+
+                # Create the output folder if it doesn't exist
+                os.makedirs(output_folder, exist_ok=True)
+
+                with open(output_path, "w", encoding="utf-8") as f:
+                    f.write(ollama_response)
+                print(f"Ollama response saved to: {output_path}")
+
+                # 5. Move the processed PDF to the done folder
+                os.makedirs(done_folder, exist_ok=True)
+                destination_path = os.path.join(done_folder, os.path.basename(pdf_file_path))
+                shutil.move(pdf_file_path, destination_path)
+                print(f"Moved processed PDF to: {destination_path}")
+
+                success = True  # Set success to True if all steps completed
+
+            else:
+                print("Error: No response received from Ollama.")
+
+        else:
+            print("Error: Could not extract text from the PDF.")
+
+    except Exception as e:
+        print(f"An error occurred during the overall process: {e}")
+        success = False  # Set success to False if any exception occurred
+
+    return success
+
+# 3. Example usage (you would call this function with your specific file paths)
+if __name__ == "__main__":
+    pdf_file = "AI State Machine Input\Jesus Christ The Savior and Redeemer of Humanity V2 GPT.pdf"  # Replace with the actual path to your input PDF file
+    output_dir = "AI State Machine Output"
+    done_dir = "AI State Machine Done"
+
+    process_successful = process_pdf_with_ollama(pdf_file, output_dir, done_dir)
+
+    if process_successful:
+        print("PDF processing completed successfully.")
     else:
-        print(f"No quotes found (no '$' in response) in {pdf_filename}. Output file NOT created.") # Message for empty response
-
-
-print("\n--- PDF Processing Complete ---") # Final completion message
+        print("PDF processing failed.")
