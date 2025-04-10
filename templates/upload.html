@@ -6,7 +6,7 @@
     <div class="text-center mb-4">
         <h1 class="text-primary">Upload a PDF</h1>
 
-        <!-- Flash Messages -->
+        <!-- Flash Messages - Displays notifications for success or error messages -->
         <div class="row mb-4">
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -23,24 +23,31 @@
             {% endwith %}
         </div>
 
-        <form action="/upload" method="POST" enctype="multipart/form-data" class="mb-4">
-            {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
-            <div class="form-row justify-content-center mb-3">
-                <div class="col-auto">
-                    <input
-                        type="file"
-                        name="file"
-                        accept="application/pdf"
-                        required
-                        class="form-control"
-                        style="max-width: 300px"
-                    />
+        <!-- Upload Button that Triggers Modal -->
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadModal">Upload</button>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload a PDF</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-success">Upload</button>
+                <div class="modal-body">
+                    <form action="/upload" method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}  <!-- CSRF token for security -->
+                        <div class="form-group">
+                            <input type="file" name="file" accept="application/pdf" required class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
             </div>
-        </form>            
+        </div>
     </div>
 
     <!-- PDF Manager Section -->
@@ -48,38 +55,19 @@
         <h1 class="text-primary">PDF Manager</h1>
     </div>
 
-    <!-- Search, Filter & Clear Section -->
-    <div class="mb-4">
-        <div class="d-flex">
-            <input
-                id="search-input"
-                type="text"
-                class="form-control mr-2"
-                placeholder="Search files by filename"
-            />
-            <button id="clear-filters-button" class="btn btn-secondary">Clear Filters</button>
-        </div>
-
-        <div class="mt-3">
-            <h5>Filter by Status:</h5>
-            <div class="form-check">
-                <input class="form-check-input filter-checkbox" type="checkbox" value="Completed" id="completed-filter">
-                <label class="form-check-label" for="completed-filter">Completed</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input filter-checkbox" type="checkbox" value="Pending" id="pending-filter">
-                <label class="form-check-label" for="pending-filter">Pending</label>
-            </div>
-        </div>
+    <!-- Search Bar -->
+    <div class="mb-3">
+        <input type="text" id="searchBar" class="form-control" placeholder="Search files..." onkeyup="filterTable()">
     </div>
 
-    <!-- Table to display files -->
-    <table class="table table-bordered table-striped">
+    <!-- Table to display uploaded files -->
+    <table class="table table-bordered table-striped" id="pdfTable">
         <thead class="bg-dark text-white">
             <tr>
                 <th class="text-center">Filename</th>
-                <th class="text-center">Status</th>
-                <th class="text-center">Date Submitted</th>
+                <th class="text-center">Change Status</th>
+                <th class="text-center">Status</th>                
+                <th class="text-center">Date Submitted (Y/M/D)</th>
                 <th class="text-center">Actions</th>
             </tr>
         </thead>
@@ -91,23 +79,70 @@
                 </td>
                 <td class="text-center">
                     <form action="{{ url_for('update_status', file_id=file[0]) }}" method="POST">
-                        {{ form.hidden_tag() }}  <!-- Include CSRF token here -->
+                        {{ form.hidden_tag() }}  <!-- CSRF token for security -->
                         <select name="status" class="form-control" onchange="this.form.submit()">
-                            <option value="in review" {% if file[3] == 'in review' %}selected{% endif %}>In Review</option>
-                            <option value="review complete" {% if file[3] == 'review complete' %}selected{% endif %}>Review Complete</option>
+                            <option value=""></option>
+                            <option value="Ready for Review" {% if file[3] == 'Ready for Review' %}selected{% endif %}>Ready for Review</option>
+                            <option value="In Review" {% if file[3] == 'In Review' %}selected{% endif %}>In Review</option>
+                            <option value="Review Complete" {% if file[3] == 'Review Complete' %}selected{% endif %}>Review Complete</option>
                         </select>
                     </form>
                 </td>
                 <td class="text-center">{{ file[4] }}</td>
+                <td class="text-center">{{ file[5].split(' ')[0] }}</td>
                 <td class="text-center actions">
-                    <form action="/delete/{{ file[0] }}" method="POST" style="display: inline;">
-                        {{ form.hidden_tag() }}  <!-- Add this line to include CSRF token -->
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
+                    <!-- Delete Button that Triggers Modal -->
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal-{{ file[0] }}">Delete</button>
                 </td>                    
             </tr>
+
+            <!-- Delete Modal for each file -->
+            <div class="modal fade" id="deleteModal-{{ file[0] }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-{{ file[0] }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-{{ file[0] }}">Confirm Deletion</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete the file <strong>{{ file[1] }}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form action="/delete/{{ file[0] }}" method="POST" style="display: inline;">
+                                {{ form.hidden_tag() }}  <!-- CSRF token for security -->
+                                <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script>
+    function filterTable() {
+        const searchInput = document.getElementById('searchBar').value.toLowerCase();
+        const table = document.getElementById('pdfTable');
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) { // Skip header row
+            const cells = rows[i].getElementsByTagName('td');
+            let match = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].textContent.toLowerCase().includes(searchInput)) {
+                    match = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = match ? '' : 'none';
+        }
+    }
+</script>
 {% endblock %}

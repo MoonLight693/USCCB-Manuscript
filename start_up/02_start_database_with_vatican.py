@@ -1,9 +1,13 @@
 from Vatican.Vatican_to_SQL import *
+from dotenv import load_dotenv
+import os
+load_dotenv()
+DB_FILE = os.getenv("DB_NAME")
 
 def start_database_with_vatican() -> None:
     # Connecting to sqlite 
     # Create an SQLite database
-    conn = sqlite3.connect("demo.db")
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     #drop table if exist
@@ -12,7 +16,7 @@ def start_database_with_vatican() -> None:
     #Create the CCC table
     cursor.execute('''
                    CREATE TABLE Vatican (
-                       ccc_number txt, paragraph txt
+                       reference txt, paragraph txt
                        )
                        ''')
 
@@ -21,7 +25,7 @@ def start_database_with_vatican() -> None:
     for x in f:
         y = x.split("$")
         cursor.execute('''
-                    insert into Vatican(CCC_number, paragraph) values ($1, $2)
+                    insert into Vatican(reference, paragraph) values ($1, $2)
                     ''', y)
 
     cursor.execute(f"DROP TABLE IF EXISTS Test_text")

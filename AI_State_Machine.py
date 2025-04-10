@@ -5,9 +5,11 @@ from pdf2image import convert_from_path
 import pytesseract
 import config
 import os  # Import the os module for file path operations
-
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
 # Initialize the client (Corrected client initialization)
-genai.configure(api_key=config.API_KEY)
+API_KEY = os.getenv("API_KEY")
+genai.configure(api_key=API_KEY)
 
 
 def convert_pdf_to_images(pdf_path):

@@ -4,56 +4,66 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='pdfjs/web/viewer.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <script type="module" src="{{ url_for('static', filename='pdfjs/web/viewer.mjs') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
 
-<!-- Remove savePdfPeriodically logic -->
-<!--
-<script>
-    async function savePdfPeriodically() {
-        ...existing code...
-    }
-
-    window.onload = function () {
-        const checkViewerReady = setInterval(function() {
-            ...existing code...
-        }, 500);  
-    };
-</script>
--->
 {% endblock %}
 
 {% block content %}
-<div class="container" style="display: flex; flex-wrap: wrap;">
+<div class="container-fluid vh-100 d-flex">
     <!-- PDF Viewer Section -->
-    <div class="pdf-container" style="flex: 1; min-width: 50%; padding: 10px;">
+    <div class="pdf-container col-6 p-3 border-end d-flex flex-column">
         <iframe 
             id="pdf-viewer"
             src="{{ url_for('static', filename='pdfjs/web/viewer.html') }}?file={{ url_for('uploaded_file', filename=filename) }}&file_id={{ file_id }}" 
-            width="100%" 
-            height="100%"
-            style="border: none;">
+            class="w-100 h-100 border-0">
         </iframe>
     </div>
 
     <!-- Table Section -->
-    <div class="table-container" style="flex: 1; min-width: 50%; padding: 10px;">
-        <button onclick="fetchTable()">Generate Table</button>
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
-        <div id="table-container"></div>
+    <div class="table-container col-6 d-flex flex-column p-3 overflow-auto">
+        <div class="mb-3">
+            <button class="btn btn-primary" onclick="fetchTable()">Generate Table</button>
+            <input type="hidden" id="tableName" value="{{ table_name }}">
+            <input type="text" id="myInput" class="form-control mt-2" onkeyup="myFunction()" placeholder="Search for names...">
+        </div>
+        <div id="table-container" class="bg-white p-3 rounded shadow-sm flex-grow-1 overflow-auto">
+            <div class="table-responsive">
+                <table id="myTable" class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <!-- Add table headers dynamically -->
+                            <!-- ...existing code... -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Add table rows dynamically -->
+                        <!-- ...existing code... -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
     function fetchTable() {
-        const pdfFilename = "{{ filename }}";
-        const tableName = pdfFilename.trim().replace('.pdf', '').replace(/ /g, '_'); // Replace spaces with underscores
+        const tableName = document.getElementById('tableName').value; // Get table name from hidden input
         
         fetch(`/generate_table?table_name=${tableName}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 document.getElementById('table-container').innerHTML = data.table;
+
+                // Reattach the search functionality to the dynamically inserted table
+                $("#myInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tbody tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                    });
+                });
             } else {
                 console.error('Error:', data.message);
             }
@@ -63,14 +73,16 @@
 </script>
 
 <script>
-$(document).ready(function(){
-    $("#myInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#myTable tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    $(document).ready(function(){
+        // Attach the search functionality to the input field
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            // Ensure the search targets the dynamically inserted table rows
+            $("#myTable tbody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
         });
     });
-});
 </script>
 
 {% endblock %}

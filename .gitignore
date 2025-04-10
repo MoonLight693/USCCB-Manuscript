@@ -5,3 +5,5 @@ venv/
 .vscode
 Vatican/__pycache__
 config.py
+__pycache__
+.env
