@@ -24,7 +24,7 @@
     <!-- Table Section -->
     <div class="table-container col-6 d-flex flex-column p-3 overflow-auto">
         <div class="mb-3">
-            <button class="btn btn-primary" onclick="fetchTable()">Generate Table</button>
+            <!--<button class="btn btn-primary" onclick="fetchTable()">Generate Table</button>-->
             <input type="hidden" id="tableName" value="{{ table_name }}">
             <input type="text" id="myInput" class="form-control mt-2" onkeyup="myFunction()" placeholder="Search for names...">
         </div>
@@ -70,6 +70,7 @@
         })
         .catch(error => console.error('Error:', error));
     }
+    fetchTable(); // Initial fetch to populate the table on page load
 </script>
 
 <script>

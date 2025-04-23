@@ -6,4 +6,6 @@ venv/
 Vatican/__pycache__
 config.py
 __pycache__
+pycache
 .env
+.clocignore

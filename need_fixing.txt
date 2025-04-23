@@ -1,3 +1,4 @@
+# this is a list of all the entries in the database that might need adjusting from the start_up/Vatican/CCC_table.txt file
 PROLOGUE$"FATHER,... this is eternal life, that they may know you, the only true God, and Jesus Christ whom you have sent."
 PROLOGUE$"God our Saviour desires all men to be saved and to come to the knowledge of the truth."
 PROLOGUE$"There is no other name under heaven given among men by which we must be saved" - than the name of JESUS.
