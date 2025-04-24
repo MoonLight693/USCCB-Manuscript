@@ -155,7 +155,7 @@ def upload_file():
         # Run AI_State_Machine.py
         try:
             subprocess.run(
-                ["python3", "/home/whitmercraft939/USCCB-Manuscript-3/AI_State_Machine.py"],
+                ["python3", "AI_State_Machine.py"],  # Updated to relative path
                 check=True
             )
             print("✅ AI_State_Machine.py executed successfully.")
@@ -167,7 +167,7 @@ def upload_file():
         # Run convert.py
         try:
             subprocess.run(
-                ["python3", "/home/whitmercraft939/USCCB-Manuscript-3/convert.py"],
+                ["python3", "convert.py"],  # Updated to relative path
                 check=True
             )
             print("✅ convert.py executed successfully.")
