@@ -38,7 +38,8 @@ https://www.python.org/downloads/release/python-3112/
 8. Hit enter until the environment starts installing.
 - After your environment is added there should be an add packages to the right of its name in the 'Environment Managers'
 9. Add project packages via the requirements.txt file
-10. create a .env file in the main directory and add this line
+10. create a .env file in the main directory and add these lines
+- API_KEY="" # your GEMINI API Key from Gemini Studio
 - DB_NAME="Database_name.db"
 - This sets the name of the database file that will be referenced throughout the project.
 11. Open up a new terminal, it should have (.venv) to the left of it, and type the following commands one at a time:
