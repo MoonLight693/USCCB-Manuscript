@@ -21,7 +21,7 @@ def start_database_with_vatican() -> None:
                        ''')
 
     #Create the CCC table 
-    f = open("start_up/Vatican/CCC_table.txt", "r")
+    f = open("start_up/Vatican/CCC_table.txt", "r", encoding="utf-8")
     for x in f:
         y = x.split("$")
         cursor.execute('''

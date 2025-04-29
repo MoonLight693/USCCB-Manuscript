@@ -26,7 +26,7 @@ def txt_into_database(folder_path: str) -> None:
                                )
                                ''')
             # Read the file and insert data into the table
-            with open(file_path, "r") as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 for x in f:
                     y = x.split("$")
                     cursor.execute(f'''
